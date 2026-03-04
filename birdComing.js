@@ -10,7 +10,7 @@
 
 function preload() {
 
-  imgPlayer = loadImage('../assets1/images/cannon.png');
+  imgPlayer = loadImage('../assets1/images/cannon_1.png');
 
   
   playerTilt = 0;
@@ -24,8 +24,11 @@ function setup() {
 	console.log("setup: ");
 	cnv = new Canvas(windowWidth, windowHeight);
   player = new Sprite(100, height-100, 200, 50, 'd');
-  imgPlayer.resize(200, 100);
+  imgPlayer.resize(200, 50);
   player.image = (imgPlayer);
+
+  world.gravity = 10;
+
 }
 
 	
@@ -56,20 +59,26 @@ function draw() {
 	}
 
   if (mouse.presses()) {
-		
-		playerProjectile = new Sprite(player.x + (100-(playerTilt)^2), player.y, 20, 'd');
-    playerProjectile.vel.x = power-(power/2);
-    playerProjectile.vel.y = playerTilt;
 
+    let radians = playerTilt * (Math.PI / 180);
+    let barrelLength = 100;
 
-	}
+    let spawnX = player.x + barrelLength * Math.cos(radians);
+    let spawnY = player.y + barrelLength * Math.sin(radians);
 
-  if (power <100) {
-    power += 1;
-  } else{
-    power = 0;
+    playerProjectile = new Sprite(spawnX, spawnY, 20, 'd');
+
+    playerProjectile.vel.x = power * Math.cos(radians);
+    playerProjectile.vel.y = power * Math.sin(radians);
+    playerProjectile.colour = ('black')
+
   }
 
+    if (power <100) {
+      power += 1;
+    } else{
+      power = 0;
+    }
 }
 
 /*******************************************************/
