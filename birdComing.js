@@ -11,14 +11,6 @@
 function preload() {
 
   imgPlayer = loadImage('../assets1/images/cannon_1.png');
-
-  
-  playerTilt = 0;
-
-  power = 0;
-
-  playerProjectile.vel.y = 0;
-
 }
 
 
@@ -29,19 +21,15 @@ function setup() {
   imgPlayer.resize(200, 30);
   player.image = (imgPlayer);
 
-  world.gravity = 10;
+  base
 
-  for (i = 0; i < 100; i++) {
-    alien = new Sprite(width / 2, height / 2, 50, 50, 'd');
-    alien.vel.x = random();
-    alien.vel.y = random();
-    alien.bounciness = 1;
-    alien.friction = 5;
-	  alien.color = 'red';
-    const VELARRAY = [-1, 1];
-	  alienGroup.add(alien);
+  birdWave = new Group();
 
-	}
+  playerTilt = 0;
+
+  power = 0;
+
+  birdIntensity = 1;
 
 }
 
@@ -94,8 +82,25 @@ function draw() {
       playerProjectile.colour = ('black')
 
       power = 0
+
+      birdWave.collides(playerProjectile, func2Call);
+	    function func2Call(_ssss,_playerProjectile) {
+	      _ssss.remove();
+        _playerProjectile.remove();
+      }
   }
 
+
+  if (birdWave.length === 0){
+    birdIntensity += 1;
+    for (i = 0; i < birdIntensity; i++) {
+    bird = new Sprite(width, random(0,height), 50, 50, 'd');
+    bird.vel.x = -5;
+	  bird.color = 'red';
+	  birdWave.add(bird);
+
+	}
+  }
 }
 
 /*******************************************************/
