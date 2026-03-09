@@ -11,17 +11,26 @@
 function preload() {
 
   imgPlayer = loadImage('../assets1/images/cannon_1.png');
+
+  imgBird = loadImage('../assets1/images/cardinal.png');
+
+  imgBg = loadImage('../assets1/images/skyline.jpg');
+
+  imgBoom = loadImage('../assets1/images/explosion.jpg');
 }
 
 
 function setup() {
 	console.log("setup: ");
 	cnv = new Canvas(1920, 940);
-  player = new Sprite(100, height-100, 200, 50, 'd');
+
+  player = new Sprite(100, height-100, 200, 50, 'k');
   imgPlayer.resize(200, 30);
   player.image = (imgPlayer);
 
-  base
+  base = new Sprite(5, height/2, 10, height, 'k')
+
+  playerProjectile = new Sprite(55555, 55555, 20, 'd');
 
   birdWave = new Group();
 
@@ -38,11 +47,16 @@ function setup() {
 // draw()
 /*******************************************************/
 function draw() {
-	background('lightBlue');
-  text(power, 200, height-50,);
-  text('Power:', 150, height-50,);
+	background(imgBg);
+  text('Power:' + power, 200, height-50,);
+  text('WAVE: ' + birdIntensity, width/2-500, height/2);
+  fill('white');
+  stroke('gray');
 
   player.rotation = playerTilt;
+
+  playerProjectile.vel.y += playerProjectile.x/500;
+
 
   if (kb.pressing('w')) {
 
@@ -61,14 +75,14 @@ function draw() {
 	}
 
   if (mouse.pressing()) {
-
     if (power < 100) {
-      power += 1;
+      power += 2;
     }
 
   }
 
   if (mouse.released()) {
+
       let radians = playerTilt * (Math.PI / 180);
       let barrelLength = 100;
 
@@ -79,27 +93,28 @@ function draw() {
 
       playerProjectile.vel.x = power * Math.cos(radians);
       playerProjectile.vel.y = power * Math.sin(radians);
-      playerProjectile.colour = ('black')
+      playerProjectile.colour = ('black');
 
-      power = 0
+      power = 0;
 
       birdWave.collides(playerProjectile, func2Call);
 	    function func2Call(_ssss,_playerProjectile) {
 	      _ssss.remove();
         _playerProjectile.remove();
       }
-  }
 
+  }
 
   if (birdWave.length === 0){
     birdIntensity += 1;
     for (i = 0; i < birdIntensity; i++) {
-    bird = new Sprite(width, random(0,height), 50, 50, 'd');
-    bird.vel.x = -5;
-	  bird.color = 'red';
-	  birdWave.add(bird);
+      bird = new Sprite(width, random(100,height-100), 50, 50, 'k');
+      bird.vel.x = -2;
+	    bird.img = (imgBird);
+      imgBird.resize(70, 70);
+	    birdWave.add(bird);
 
-	}
+	  }
   }
 }
 
