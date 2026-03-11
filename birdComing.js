@@ -31,6 +31,7 @@ function setup() {
   base = new Sprite(5, height/2, 10, height, 'k')
 
   playerProjectile = new Sprite(55555, 55555, 20, 'd');
+  flash = new Sprite(55555, 55555, 20, 'k');
 
   birdWave = new Group();
 
@@ -48,15 +49,18 @@ function setup() {
 /*******************************************************/
 function draw() {
 	background(imgBg);
-  text('Power:' + power, 200, height-50,);
-  text('WAVE: ' + birdIntensity, width/2-500, height/2);
+
+  
   fill('white');
   stroke('gray');
+  text('Power:' + power, 200, height-50,);
+  fill('orange');
+  stroke('red');
+  text('WAVE: ' + (birdIntensity - 1), width/2-500, height/2);
 
   player.rotation = playerTilt;
 
   playerProjectile.vel.y += playerProjectile.x/500;
-
 
   if (kb.pressing('w')) {
 
@@ -95,10 +99,13 @@ function draw() {
       playerProjectile.vel.y = power * Math.sin(radians);
       playerProjectile.colour = ('black');
 
+      flash = new Sprite(spawnX, spawnY, 60, 60, 'k');
+      flash.image = (imgBoom);
+
       power = 0;
 
-      birdWave.collides(playerProjectile, func2Call);
-	    function func2Call(_ssss,_playerProjectile) {
+      birdWave.collides(playerProjectile, birdHit);
+	    function birdHit(_ssss,_playerProjectile) {
 	      _ssss.remove();
         _playerProjectile.remove();
       }
