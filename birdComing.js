@@ -15,8 +15,6 @@ function preload() {
   imgBird = loadImage('../assets1/images/cardinal.png');
 
   imgBg = loadImage('../assets1/images/skyline.jpg');
-
-  imgBoom = loadImage('../assets1/images/explosion.jpg');
 }
 
 
@@ -31,7 +29,6 @@ function setup() {
   base = new Sprite(5, height/2, 10, height, 'k')
 
   playerProjectile = new Sprite(55555, 55555, 20, 'd');
-  flash = new Sprite(55555, 55555, 20, 'k');
 
   birdWave = new Group();
 
@@ -40,6 +37,12 @@ function setup() {
   power = 0;
 
   birdIntensity = 1;
+
+  bossFight = 'false';
+
+  birdBossNum = 1;
+  
+  score = 0;
 
 }
 
@@ -50,17 +53,48 @@ function setup() {
 function draw() {
 	background(imgBg);
 
-  
+// boss trigger //
+  if (kb.pressing('p')){
+    bossFight = 'true';
+    birdIntensity = 11;
+  }
+
+  textSize(30)
   fill('white');
   stroke('gray');
   text('Power:' + power, 200, height-50,);
   fill('orange');
   stroke('red');
   text('WAVE: ' + (birdIntensity - 1), width/2-500, height/2);
+  textSize(60)
+  fill('white');
+  stroke('black');
+  text('Score:' + score, width/2, 100,);
+
+  text(playerProjectile.vel.x, width/2, 300,);
+  text(playerProjectile.vel.y, width/2, 500,);
 
   player.rotation = playerTilt;
+//fix dis
+  //playerProjectile.vel.y += (playerProjectile.x/500);//
 
-  playerProjectile.vel.y += playerProjectile.x/500;
+// boss fight initiate //
+  if ((birdIntensity-1) === 10) {
+    bossFight = 'true';
+    if (birdBossNum > 0){
+      birdBoss = new Sprite(width, height/2, 200, 200, 'k');
+      birdBoss.vel.x = -1;
+	    birdBoss.img = (imgBird);
+      imgBird.resize(200, 200);
+      birdBossHP = 1000;
+      birdBossNum = 0;
+
+      if (birdBoss.collides(playerProjectile)){
+        birdBossHP -= 50;
+      }
+    }
+  }
+
 
   if (kb.pressing('w')) {
 
@@ -99,20 +133,19 @@ function draw() {
       playerProjectile.vel.y = power * Math.sin(radians);
       playerProjectile.colour = ('black');
 
-      flash = new Sprite(spawnX, spawnY, 60, 60, 'k');
-      flash.image = (imgBoom);
-
-      power = 0;
-
+// bird hit detection //
       birdWave.collides(playerProjectile, birdHit);
 	    function birdHit(_ssss,_playerProjectile) {
 	      _ssss.remove();
         _playerProjectile.remove();
+        score += 50;
       }
 
+      power = 0;
+// bird hit detection //
   }
 
-  if (birdWave.length === 0){
+  if (birdWave.length === 0 && bossFight === 'false'){
     birdIntensity += 1;
     for (i = 0; i < birdIntensity; i++) {
       bird = new Sprite(width, random(100,height-100), 50, 50, 'k');
@@ -122,6 +155,17 @@ function draw() {
 	    birdWave.add(bird);
 
 	  }
+  }
+
+  if (bossFight === 'true'){
+    fill('orange');
+    stroke('red');
+    textSize(50)
+    text('Boss Bird Incoming! Health: ' + birdBossHP, width/2, height/2);
+
+    if (birdBossHP < 1) {
+      birdBoss.remove()
+    }
   }
 }
 
