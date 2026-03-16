@@ -13,7 +13,7 @@ function preload() {
 
   imgBird = loadImage('../assets1/images/cardinal.png');
 
-  imgBg = loadImage('../assets1/images/skyline.jpg');
+  imgBg = loadImage('../assets1/images/blueSky.jpg');
 
   imgBirdBoss = loadImage('../assets1/images/images-removebg-preview.png');
 }
@@ -35,6 +35,8 @@ function setup() {
 
   birdBosses = new Group();
 
+  playerProjectiles = new Group();
+
 
   playerTilt = 0;
 
@@ -48,6 +50,13 @@ function setup() {
   
   score = 0;
 
+  lastBirdSpawn = 0;
+
+  birdSpawnDelay = 400; // milliseconds between birds
+
+  birdsSpawned = 0;
+
+  waveSpawning = 'false';
 }
 
 	
@@ -58,7 +67,7 @@ function draw() {
 	background(imgBg);
 
 // boss trigger //
-  if (kb.pressing('p')){
+  if (kb.pressed('p')){
     bossFight = 'true';
     birdIntensity = 11;
   }
@@ -69,32 +78,31 @@ function draw() {
   text('Power:' + power, 200, height-50,);
   fill('orange');
   stroke('red');
-  text('WAVE: ' + (birdIntensity - 1), width/2-500, height/2);
+  text('WAVE: ' + (birdIntensity - 1), 100, 100);
   textSize(60)
   fill('white');
   stroke('black');
-  text('Score:' + score, width/2, 100,);
-
-text(millis(), width/2, 300,);
+  text('Score:' + score, 300, 100,);
 
   player.rotation = playerTilt;
 //fix dis
-  playerProjectile.vel.y += (playerProjectile.x/500);
+  for (let p of playerProjectiles) {
+    p.vel.y += 0.5;
+  }
 
 // boss fight initiate //
   if ((birdIntensity-1) === 10) {
     bossFight = 'true';
     if (birdBossNum > 0){
-      birdBoss = new Sprite(width, height/2, 200, 200, 'k');
+      birdBoss = new Sprite(width, height/2, 100, 100, 'k');
       birdBoss.vel.x = -1;
 	    birdBoss.img = (imgBirdBoss);
       imgBirdBoss.resize(200, 200);
-      birdBossHP = 1000;
+      birdBossHP = 1400;
       birdBossNum = 0;
       birdBosses.add(birdBoss);
     }
   }
-
 
   if (kb.pressing('w')) {
 
@@ -130,6 +138,8 @@ text(millis(), width/2, 300,);
 
       playerProjectile = new Sprite(spawnX, spawnY, 20, 'd');
 
+      playerProjectiles.add(playerProjectile);
+
       playerProjectile.vel.x = power * Math.cos(radians);
       playerProjectile.vel.y = power * Math.sin(radians);
       playerProjectile.colour = ('black');
@@ -147,34 +157,50 @@ text(millis(), width/2, 300,);
 	      birdBossHP -= playerProjectileDamage;
         _playerProjectile.remove();
         score += 5;
+        birdBoss.y = random(100, height-100);
       }
       power = 0;
-// bird hit detection //
+
   }
-  let birdCooldown = 1000;
-  let lastBirdCooldown;
-  lastBirdCooldown = millis();
-  if (bossFight === 'false' && millis()-lastBirdCooldown>=birdCooldown){
+
+  // bird hit detection //
+  if (bossFight === 'false' && birdWave.length === 0 && waveSpawning === 'false'){
     birdIntensity += 1;
-    for (i = 0; i < birdIntensity; i++) {
-      bird = new Sprite(width, random(100,height-100), 50, 50, 'k');
-      bird.vel.x = -2;
-	    bird.img = (imgBird);
-      imgBird.resize(70, 70);
-	    birdWave.add(bird);
+    birdSpawned = 0;
+    waveSpawning = 'true';
+}
 
-	  }
+if (bossFight === 'false' && birdsSpawned < birdIntensity && waveSpawning === 'true') {
+
+  if (millis() - lastBirdSpawn > birdSpawnDelay) {
+
+    bird = new Sprite(width, random(100,height-100), 50, 50, 'k');
+    bird.vel.x = -2;
+    bird.img = imgBird;
+    imgBird.resize(70,70);
+
+    birdWave.add(bird);
+
+    birdsSpawned++;
+    lastBirdSpawn = millis();
   }
+}
 
-  if (bossFight === 'true'){
+if (birdWave.length === 0 && birdsSpawned === birdIntensity) {
+  birdsSpawned = 0;
+  waveSpawning = 'false';
+}
+
+  if (bossFight == 'true'){
     fill('orange');
     stroke('red');
-    textSize(50)
+    textSize(50);
     text('Boss Bird Incoming! Health: ' + birdBossHP, width/2, height/2);
 
     if (birdBossHP < 1) {
-      birdBoss.remove()
+      birdBoss.remove();
       bossFight = 'false';
+      birdIntensity += 1;
     }
   }
 }
