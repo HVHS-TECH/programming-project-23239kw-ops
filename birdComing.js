@@ -13,7 +13,9 @@ function preload() {
 
   imgBird = loadImage('../assets1/images/cardinal.png');
 
-  imgBg = loadImage('../assets1/images/blueSky.jpg');
+  imgStartBg = loadImage('../assets1/images/skyline.jpg');
+
+  imgGameBg = loadImage('../assets1/images/blueSky.jpg');
 
   imgBirdBoss = loadImage('../assets1/images/images-removebg-preview.png');
 }
@@ -35,7 +37,7 @@ function setup() {
 
   birdBosses = new Group();
 
-  playerProjectiles = new Group();
+  projectilesGroup = new Group();
 
 
   playerTilt = 0;
@@ -57,14 +59,26 @@ function setup() {
   birdsSpawned = 0;
 
   waveSpawning = 'false';
+
+  gameState = 'start';
 }
 
 	
 /*******************************************************/
 // draw()
 /*******************************************************/
-function draw() {
-	background(imgBg);
+
+function start() {
+  background(imgStartBg);
+  startButton = new Sprite(width/2, height/2, 500, 100, 's')
+  startButton.color = ('white')
+  if (kb.pressing()) {
+    gameState = 'game';
+  }
+}
+
+function game() {
+  background(imgGameBg);
 
 // boss trigger //
   if (kb.pressed('p')){
@@ -85,8 +99,8 @@ function draw() {
   text('Score:' + score, 300, 100,);
 
   player.rotation = playerTilt;
-//fix dis
-  for (let p of playerProjectiles) {
+
+  for (let p of projectilesGroup) {
     p.vel.y += 0.5;
   }
 
@@ -138,7 +152,7 @@ function draw() {
 
       playerProjectile = new Sprite(spawnX, spawnY, 20, 'd');
 
-      playerProjectiles.add(playerProjectile);
+      projectilesGroup.add(playerProjectile);
 
       playerProjectile.vel.x = power * Math.cos(radians);
       playerProjectile.vel.y = power * Math.sin(radians);
@@ -205,6 +219,18 @@ if (birdWave.length === 0 && birdsSpawned === birdIntensity) {
   }
 }
 
+function draw() {
+  if (gameState === 'start'){
+    start();
+  }
+  if (gameState === 'game'){
+    game();
+  }
+  if (gameState === 'end'){
+    end();
+  }
+}
+	
 /*******************************************************/
 //  END OF APP
 /*******************************************************/
