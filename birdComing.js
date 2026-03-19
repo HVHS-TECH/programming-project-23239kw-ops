@@ -13,11 +13,15 @@ function preload() {
 
   imgBird = loadImage('../assets1/images/cardinal.png');
 
-  imgStartBg = loadImage('../assets1/images/skyline.jpg');
+  imgOverBg = loadImage('../assets1/images/skyline.jpg');
 
   imgGameBg = loadImage('../assets1/images/blueSky.jpg');
 
   imgBirdBoss = loadImage('../assets1/images/images-removebg-preview.png');
+
+  imgStartButton = loadImage('../assets1/images/start-button.png');
+
+  imgStartBird = loadImage('../assets1/images/start screen bird.png');
 }
 
 
@@ -28,8 +32,10 @@ function setup() {
   player = new Sprite(100, height-100, 200, 50, 'k');
   imgPlayer.resize(200, 30);
   player.image = (imgPlayer);
+  player.opacity = 0;
 
   base = new Sprite(5, height/2, 10, height, 'k')
+  base.opacity = 0;
 
   playerProjectile = new Sprite(55555, 55555, 20, 'd');
 
@@ -61,6 +67,14 @@ function setup() {
   waveSpawning = 'false';
 
   gameState = 'start';
+
+  startButton = new Sprite(width/2, height/2 + 150, 500, 100, 's')
+  startButton.color = ('white')
+  startButton.image = (imgStartButton)
+  imgStartButton.resize(500, 100);
+
+  startBird = new Sprite(width/2, height/2 - 200, 408, 612, 's');
+  startBird.image = (imgStartBird);
 }
 
 	
@@ -69,22 +83,38 @@ function setup() {
 /*******************************************************/
 
 function start() {
-  background(imgStartBg);
-  startButton = new Sprite(width/2, height/2, 500, 100, 's')
-  startButton.color = ('white')
-  if (kb.pressing()) {
+  background(imgGameBg);
+  if (mouse.presses() && startButton.mouse.hovering()) {
     gameState = 'game';
+    startButton.remove();
+    startBird.remove();
+    player.opacity = 100;
+    player.opacity = 100;
+
   }
 }
 
 function game() {
   background(imgGameBg);
 
-// boss trigger //
+// cheats //
   if (kb.pressed('p')){
     bossFight = 'true';
     birdIntensity = 11;
   }
+
+  if (kb.pressed('o')){
+    bird = new Sprite(width, random(100, height-100), 50, 50, 'k');
+    bird.vel.x = -2;
+    bird.img = imgBird;
+    imgBird.resize(70,70);
+    birdWave.add(bird)
+  }
+
+  if (kb.pressed('[')){
+    birdIntensity = 101;
+  }
+//
 
   textSize(30)
   fill('white');
@@ -112,7 +142,7 @@ function game() {
       birdBoss.vel.x = -1;
 	    birdBoss.img = (imgBirdBoss);
       imgBirdBoss.resize(200, 200);
-      birdBossHP = 1400;
+      birdBossHP = 1000;
       birdBossNum = 0;
       birdBosses.add(birdBoss);
     }
@@ -171,7 +201,15 @@ function game() {
 	      birdBossHP -= playerProjectileDamage;
         _playerProjectile.remove();
         score += 5;
-        birdBoss.y = random(100, height-100);
+        birdBoss.y = random(100, height-500);
+
+        bird = new Sprite(birdBoss.x, birdBoss.y, 50, 50, 'k');
+        bird.vel.x = -3;
+        bird.img = imgBird;
+        imgBird.resize(70,70);
+
+        birdWave.add(bird);
+
       }
       power = 0;
 
@@ -220,13 +258,13 @@ if (birdWave.length === 0 && birdsSpawned === birdIntensity) {
 }
 
 function draw() {
-  if (gameState === 'start'){
+  if (gameState == 'start'){
     start();
   }
-  if (gameState === 'game'){
+  if (gameState == 'game'){
     game();
   }
-  if (gameState === 'end'){
+  if (gameState == 'end'){
     end();
   }
 }
