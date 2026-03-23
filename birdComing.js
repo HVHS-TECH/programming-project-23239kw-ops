@@ -15,7 +15,7 @@ function preload() {
 
   imgOverBg = loadImage('../assets1/images/skyline.jpg');
 
-  imgGameBg = loadImage('../assets1/images/blueSky.jpg');
+  imgGameBg = loadImage('../assets1/images/skyline.jpg');
 
   imgBirdBoss = loadImage('../assets1/images/images-removebg-preview.png');
 
@@ -27,7 +27,7 @@ function preload() {
 
 function setup() {
 	console.log("setup: ");
-	cnv = new Canvas(1920, 940);
+	cnv = new Canvas(windowWidth, windowHeight);
 
   player = new Sprite(100, height-100, 200, 50, 'k');
   imgPlayer.resize(200, 30);
@@ -60,7 +60,7 @@ function setup() {
 
   lastBirdSpawn = 0;
 
-  birdSpawnDelay = 400; // milliseconds between birds
+  birdSpawnDelay = 1000; // milliseconds between birds
 
   birdsSpawned = 0;
 
