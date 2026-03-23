@@ -21,7 +21,7 @@ function preload() {
 
   imgStartButton = loadImage('../assets1/images/start-button.png');
 
-  imgStartBird = loadImage('../assets1/images/start screen bird.png');
+  imgStartBird = loadImage('../assets1/images/start screen.png');
 }
 
 
@@ -68,13 +68,14 @@ function setup() {
 
   gameState = 'start';
 
-  startButton = new Sprite(width/2, height/2 + 150, 500, 100, 's')
-  startButton.color = ('white')
-  startButton.image = (imgStartButton)
-  imgStartButton.resize(500, 100);
-
   startBird = new Sprite(width/2, height/2 - 200, 408, 612, 's');
+  imgStartBird.resize(200, 500);
   startBird.image = (imgStartBird);
+
+  startButton = new Sprite(width/2, height/2 + 150, 500, 100, 's');
+  startButton.color = ('white');
+  startButton.image = (imgStartButton);
+  imgStartButton.resize(500, 100);
 }
 
 	
@@ -90,11 +91,13 @@ function start() {
     startBird.remove();
     player.opacity = 100;
     player.opacity = 100;
+    base.opacity = 100;
 
   }
 }
 
 function game() {
+
   background(imgGameBg);
 
 // cheats //
@@ -222,6 +225,12 @@ function game() {
     waveSpawning = 'true';
 }
 
+birdWave.collides(base, hitBase);
+
+function hitBase(birdWave, base){
+  gameState = 'end';
+}
+
 if (bossFight === 'false' && birdsSpawned < birdIntensity && waveSpawning === 'true') {
 
   if (millis() - lastBirdSpawn > birdSpawnDelay) {
@@ -255,6 +264,8 @@ if (birdWave.length === 0 && birdsSpawned === birdIntensity) {
       birdIntensity += 1;
     }
   }
+}
+function end() {
 }
 
 function draw() {
