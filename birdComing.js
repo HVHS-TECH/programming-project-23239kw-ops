@@ -22,6 +22,8 @@ function preload() {
   imgStartButton = loadImage('../assets1/images/start-button.png');
 
   imgStartBird = loadImage('../assets1/images/start screen.png');
+
+  imgRestartButton = loadImage('../assets1/images/restart.png');
 }
 
 
@@ -44,6 +46,8 @@ function setup() {
   birdBosses = new Group();
 
   projectilesGroup = new Group();
+
+  bird = new Sprite(55555, 55555, 20, 20, 'k')
 
 
   playerTilt = 0;
@@ -98,6 +102,7 @@ function start() {
 
 function game() {
 
+
   background(imgGameBg);
 
 // cheats //
@@ -139,6 +144,7 @@ function game() {
 
 // boss fight initiate //
   if ((birdIntensity-1) === 10) {
+
     bossFight = 'true';
     if (birdBossNum > 0){
       birdBoss = new Sprite(width, height/2, 100, 100, 'k');
@@ -225,17 +231,11 @@ function game() {
     waveSpawning = 'true';
 }
 
-birdWave.collides(base, hitBase);
-
-function hitBase(birdWave, base){
-  gameState = 'end';
-}
-
 if (bossFight === 'false' && birdsSpawned < birdIntensity && waveSpawning === 'true') {
 
   if (millis() - lastBirdSpawn > birdSpawnDelay) {
 
-    bird = new Sprite(width, random(100,height-100), 50, 50, 'k');
+    bird = new Sprite(width, random(100,height-100), 50, 50, 'd');
     bird.vel.x = -2;
     bird.img = imgBird;
     imgBird.resize(70,70);
@@ -265,10 +265,37 @@ if (birdWave.length === 0 && birdsSpawned === birdIntensity) {
     }
   }
 }
+
 function end() {
+  text('GAME OVER, Your score was ' + score, width/2, height/2);
+  restartButton = new Sprite(600, height/2, 100, 's');
+  imgRestartButton.resize(100,100);
+  restartButton.image = imgRestartButton;
+
+  if (mouse.presses() && restartButton.mouse.hovering()) {
+    gameState = 'game';
+    restartButtonButton.remove();
+    base.opacity = 100;
+
+    score = 0;
+    birdIntensity = 2;
+
+  }
+
 }
 
+function hitBase() {
+  birdWave.removeAll();
+    birdBosses.removeAll();
+    console.log('gameover')
+    gameState = 'end';
+  }
+
 function draw() {
+
+  birdWave.overlaps(base, hitBase);
+  birdBosses.overlaps(base, hitBase);
+
   if (gameState == 'start'){
     start();
   }
