@@ -21,7 +21,7 @@ function preload() {
 
   imgStartButton = loadImage('../assets1/images/start-button.png');
 
-  imgStartBird = loadImage('../assets1/images/start screen.png');
+  imgStartBird = loadImage('../assets1/images/dopestImage.png');
 
   imgRestartButton = loadImage('../assets1/images/restart.png');
 }
@@ -49,6 +49,7 @@ function setup() {
 
   bird = new Sprite(55555, 55555, 20, 20, 'k')
 
+  restartButton = new Sprite(55555, 55555, 100, 's');
 
   playerTilt = 0;
 
@@ -72,14 +73,22 @@ function setup() {
 
   gameState = 'start';
 
-  startBird = new Sprite(width/2, height/2 - 200, 408, 612, 's');
-  imgStartBird.resize(200, 500);
+  startBird = new Sprite(width/2, height/2, 408, 612, 's');
+  imgStartBird.resize(width, height);
   startBird.image = (imgStartBird);
 
-  startButton = new Sprite(width/2, height/2 + 150, 500, 100, 's');
+  startButton = new Sprite(width/2, height/2 + 250, 500, 100, 's');
   startButton.color = ('white');
   startButton.image = (imgStartButton);
   imgStartButton.resize(500, 100);
+
+  //howToPlayButton = new Sprite(width/2, height/2 + 350, 500, 100, 's');
+  //howToPlayButton.color = ('blue');
+
+  textSize(50)
+  fill('black');
+  stroke('white');
+  text('how to play', width/2, height/2 + 250)
 }
 
 	
@@ -111,8 +120,8 @@ function game() {
     birdIntensity = 11;
   }
 
-  if (kb.pressed('o')){
-    bird = new Sprite(width, random(100, height-100), 50, 50, 'k');
+  if (kb.pressing('o')){
+    bird = new Sprite(width, random(100, height-100), 50, 50, 'd');
     bird.vel.x = -2;
     bird.img = imgBird;
     imgBird.resize(70,70);
@@ -268,9 +277,6 @@ if (birdWave.length === 0 && birdsSpawned === birdIntensity) {
 
 function end() {
   text('GAME OVER, Your score was ' + score, width/2, height/2);
-  restartButton = new Sprite(600, height/2, 100, 's');
-  imgRestartButton.resize(100,100);
-  restartButton.image = imgRestartButton;
 
   if (mouse.presses() && restartButton.mouse.hovering()) {
     gameState = 'game';
@@ -281,7 +287,6 @@ function end() {
     birdIntensity = 2;
 
   }
-
 }
 
 function hitBase() {
@@ -289,6 +294,10 @@ function hitBase() {
     birdBosses.removeAll();
     console.log('gameover')
     gameState = 'end';
+
+     restartButton = new Sprite(600, height/2, 100, 's');
+     imgRestartButton.resize(100,100);
+  restartButton.image = imgRestartButton;
   }
 
 function draw() {
@@ -296,13 +305,13 @@ function draw() {
   birdWave.overlaps(base, hitBase);
   birdBosses.overlaps(base, hitBase);
 
-  if (gameState == 'start'){
+  if (gameState === 'start'){
     start();
   }
-  if (gameState == 'game'){
+  if (gameState === 'game'){
     game();
   }
-  if (gameState == 'end'){
+  if (gameState === 'end'){
     end();
   }
 }
