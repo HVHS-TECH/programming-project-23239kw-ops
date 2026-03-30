@@ -11,13 +11,13 @@ function preload() {
 
   imgPlayer = loadImage('../assets1/images/cannon_1.png');
 
-  imgBird = loadImage('../assets1/images/cardinal.png');
+  imgBird = loadImage('../assets1/images/bird.png');
 
   imgOverBg = loadImage('../assets1/images/skyline.jpg');
 
   imgGameBg = loadImage('../assets1/images/skyline.jpg');
 
-  imgBirdBoss = loadImage('../assets1/images/images-removebg-preview.png');
+  imgBirdBoss = loadImage('../assets1/images/boss.png');
 
   imgStartButton = loadImage('../assets1/images/start-button.png');
 
