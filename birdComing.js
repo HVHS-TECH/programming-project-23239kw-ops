@@ -9,21 +9,21 @@
 /*******************************************************/
 function preload() {
 
-  imgPlayer = loadImage('../assets1/images/cannon_1.png');
+  imgPlayer = loadImage('assets1/images/cannon_1.png');
 
-  imgBird = loadImage('../assets1/images/bird.png');
+  imgBird = loadImage('assets1/images/bird.png');
 
-  imgOverBg = loadImage('../assets1/images/skyline.jpg');
+  imgOverBg = loadImage('assets1/images/skyline.jpg');
 
-  imgGameBg = loadImage('../assets1/images/skyline.jpg');
+  imgGameBg = loadImage('assets1/images/skyline.jpg');
 
-  imgBirdBoss = loadImage('../assets1/images/boss.png');
+  imgBirdBoss = loadImage('assets1/images/boss.png');
 
-  imgStartButton = loadImage('../assets1/images/start-button.png');
+  imgStartButton = loadImage('assets1/images/start-button.png');
 
-  imgStartBird = loadImage('../assets1/images/dopestImage.png');
+  imgStartBird = loadImage('assets1/images/dopestImage.png');
 
-  imgRestartButton = loadImage('../assets1/images/restart.png');
+  imgRestartButton = loadImage('assets1/images/restart.png');
 }
 
 
